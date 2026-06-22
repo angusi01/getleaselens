@@ -14,7 +14,7 @@ create table if not exists getleaselens.purchases (
   file_hash text not null,
   analysis_id uuid references getleaselens.analyses(id),
   access_token_hash text null,
-  status text not null default 'pending' check (status in ('pending', 'paid', 'expired', 'error')),
+  status text not null default 'pending' check (status in ('pending', 'processing', 'paid', 'complete', 'expired', 'error')),
   error_message text null,
   created_at timestamptz not null default now()
 );
@@ -26,11 +26,18 @@ create table if not exists getleaselens.monthly_usage (
   updated_at timestamptz default now()
 );
 
+create table if not exists getleaselens.credit_balances (
+  user_id uuid primary key,
+  balance int not null default 0 check (balance >= 0),
+  updated_at timestamptz not null default now()
+);
+
 create index if not exists purchases_analysis_id_idx on getleaselens.purchases (analysis_id);
 
 alter table getleaselens.analyses enable row level security;
 alter table getleaselens.purchases enable row level security;
 alter table getleaselens.monthly_usage enable row level security;
+alter table getleaselens.credit_balances enable row level security;
 
 revoke all on schema getleaselens from anon, authenticated;
 revoke all on all tables in schema getleaselens from anon, authenticated;
