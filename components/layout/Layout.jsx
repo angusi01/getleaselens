@@ -8,8 +8,8 @@ export function Layout({ children }) {
         <nav>
           <Link href="/how-it-works">How It Works</Link>
           <Link href="/security">Security</Link>
-          <Link href="/privacy">Privacy</Link>
-          <Link href="/contact">Contact</Link>
+          <a href="/#pricing">Pricing</a>
+          <a className="nav-cta" href="/#analyse">Analyse a Lease</a>
         </nav>
       </header>
       {children}

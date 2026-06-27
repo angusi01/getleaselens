@@ -5,30 +5,17 @@ export const config = {
 };
 
 export default async function middleware(request) {
-    // Skip rate limiting if Upstash env vars are not configured
-    if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
-        return NextResponse.next();
-    }
-
     try {
-        const { Ratelimit } = await import('@upstash/ratelimit');
-        const { Redis } = await import('@upstash/redis');
-        const redis = new Redis({
-            url: process.env.UPSTASH_REDIS_REST_URL,
-            token: process.env.UPSTASH_REDIS_REST_TOKEN,
-        });
-        const ratelimit = new Ratelimit({
-            redis,
-            limiter: Ratelimit.slidingWindow(5, '1 h'),
-        });
+        const { getUploadRatelimit } = await import('./lib/rate-limit');
+        const ratelimit = getUploadRatelimit();
+        if (!ratelimit) return NextResponse.next();
         const ip = request.headers.get('x-forwarded-for')?.split(',')[0] ?? '127.0.0.1';
         const { success } = await ratelimit.limit(ip);
-        if (!success) {
+        if (!success)
             return new NextResponse('Too many requests', { status: 429 });
-        }
     } catch (err) {
-        console.warn('[rate-limit] skipped:', err.message);
+        // Rate limiting unavailable - allow request through
+        console.warn('Rate limit check failed, allowing request:', err.message);
     }
-
     return NextResponse.next();
 }

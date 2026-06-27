@@ -68,8 +68,8 @@ export default async function handler(req, res) {
         access_token_hash: sha256Hex(token),
     })
         .eq('id', purchaseId);
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://getleaselens.com.au';
-    const resultUrl = `${baseUrl}/result?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? 'https://getleaselens.com.au';
+    const resultUrl = `${baseUrl}/result?token=${encodeURIComponent(token)}`;
     await sendReportReadyEmail(email, resultUrl);
     return res.status(200).json({ ok: true });
 }

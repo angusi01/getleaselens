@@ -3,7 +3,7 @@ import { sha256Hex, timingSafeEqualHex } from '../../lib/security';
 import { getServiceSupabase } from '../../lib/supabaseClient';
 const querySchema = z.object({
     id: z.string().uuid(),
-    email: z.string().email(),
+    email: z.string().email().optional(),
     token: z.string().min(20),
 });
 export default async function handler(req, res) {
@@ -14,13 +14,16 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'invalid_request' });
     const supabase = getServiceSupabase();
     const tokenHash = sha256Hex(parsed.data.token);
-    const { data: purchase, error: purchaseError } = await supabase
+    let purchaseQuery = supabase
         .from('purchases')
         .select('analysis_id, access_token_hash, status')
-        .eq('email', parsed.data.email)
         .eq('analysis_id', parsed.data.id)
-        .single();
-    if (purchaseError || !purchase || purchase.status !== 'paid' || !timingSafeEqualHex(purchase.access_token_hash, tokenHash)) {
+        .limit(10);
+    if (parsed.data.email)
+        purchaseQuery = purchaseQuery.eq('email', parsed.data.email);
+    const { data: purchases, error: purchaseError } = await purchaseQuery;
+    const purchase = purchases?.find((row) => ['paid', 'complete'].includes(row.status) && timingSafeEqualHex(row.access_token_hash, tokenHash));
+    if (purchaseError || !purchase) {
         return res.status(401).json({ error: 'invalid_token' });
     }
     const { data: analysis, error } = await supabase
