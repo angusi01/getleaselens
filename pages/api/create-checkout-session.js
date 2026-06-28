@@ -22,7 +22,12 @@ export default async function handler(req, res) {
             return res.status(401).json({ error: { code: 'ACCOUNT_REQUIRED', message: 'Create an account or log in to buy the 5-pack.' } });
     }
     const stripe = getStripe();
-    const origin = process.env.NEXT_PUBLIC_BASE_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? req.headers.origin ?? 'https://getleaselens.com.au';
+    const origin =
+      process.env.NEXT_PUBLIC_APP_URL ??
+      process.env.NEXT_PUBLIC_BASE_URL ??
+      process.env.NEXT_PUBLIC_SITE_URL ??
+      req.headers.origin ??
+      'https://getleaselens.com.au';
     const price = process.env[priceEnvByProduct[parsed.data.product]]
         ?? (parsed.data.product === 'single' ? process.env.STRIPE_SINGLE_PRICE_ID : undefined);
     if (!price)
