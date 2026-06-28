@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { ResultView } from '../components/ResultView';
+import { SiteFooter } from '../components/layout/SiteFooter';
 
 const mockReport = {
   summary:
@@ -69,5 +70,21 @@ export default function ResultPage() {
     load().catch(() => setStatus('Could not load report.'));
   }, [router.isReady, router.query]);
 
-  return <main className="page">{result ? <ResultView result={result} /> : <p>{status}</p>}</main>;
+  return (
+    <main className="min-h-screen bg-surface pt-16 text-on-background">
+      {result ? (
+        <>
+          <ResultView result={result} />
+          <SiteFooter className="bg-white" />
+        </>
+      ) : (
+        <section className="mx-auto flex min-h-[60vh] max-w-container-max items-center justify-center px-6 py-20">
+          <div className="rounded-xl border border-outline-variant bg-white px-8 py-10 text-center ambient-shadow">
+            <span className="material-symbols-outlined mb-4 text-[36px] text-primary-container">hourglass_top</span>
+            <p className="font-body-lg text-body-lg text-on-surface-variant" aria-live="polite">{status}</p>
+          </div>
+        </section>
+      )}
+    </main>
+  );
 }

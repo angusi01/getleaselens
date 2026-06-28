@@ -2,6 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
+.stitch-shell {
+  min-height: 100vh;
+  background: #ffffff;
+  color: #161c22;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.stitch-shell .material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+}
+.stitch-shell .step-number {
+  color: transparent;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 5rem;
+  font-weight: 800;
+  line-height: 1;
+  -webkit-text-stroke: 1px #e2e8f0;
+}
+.stitch-shell .ambient-shadow {
+  box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+}
+.stitch-shell .report-section {
+  transition: transform .2s ease, border-color .2s ease;
+}
+.stitch-shell .report-section:hover {
+  transform: translateY(-2px);
+  border-color: #cbd5e1;
+}
+
 :root {
   color-scheme: dark;
   --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;

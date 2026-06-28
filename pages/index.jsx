@@ -1,138 +1,99 @@
-import { useState } from 'react';
-import { ChevronDown, Lock, ShieldCheck, Trash2, UserX } from '../components/Icons';
+import Link from 'next/link';
 import { UploadForm } from '../components/UploadForm';
+import { SiteFooter } from '../components/layout/SiteFooter';
 
-const clauses = [
-  ['Make good clause', 'High risk', 'Requires full reinstatement at tenant cost.', 'danger'],
-  ['Personal guarantee', 'High risk', 'Directors remain liable after assignment.', 'danger'],
-  ['Rent review', 'Fair', 'Fixed 3% annual review is clearly stated.', 'success'],
-  ['Option term', 'Fair', 'Two 3-year options with written notice window.', 'success'],
-  ['Outgoings', 'Review', 'Recoverable expenses need line-item confirmation.', 'danger'],
-  ['Permitted use', 'Fair', 'Business use is specific and practical.', 'success'],
+const reportAreas = [
+  'Rent & Review',
+  'Make Good',
+  'Lease Term',
+  'Personal Guarantee',
+  'Permitted Use',
+  'Outgoings',
 ];
 
-const faqs = [
-  ['Is this legal advice?', 'No. GetLeaseLens provides a structured plain-English report so you know what to ask a qualified solicitor before signing.'],
-  ['What happens to my PDF?', 'Your lease is encrypted during upload and deleted after analysis. We do not keep a copy for model training or marketing use.'],
-  ['Do I need an account?', 'No. Single reports and 5-packs can be purchased without creating an account.'],
+const steps = [
+  ['01', 'Upload Document', 'Securely drag and drop your commercial or retail lease PDF. Our system handles documents up to 150 pages with enterprise-grade encryption.'],
+  ['02', 'AI Processing', 'Our specialized legal analysis engine scans for hidden clauses, unfavorable terms, and critical obligations tailored specifically to Australian commercial law.'],
+  ['03', 'Receive Report', 'Download your structured PDF report within 120 seconds. Review red flags, a clear executive summary, and a simplified breakdown of your responsibilities.'],
 ];
-
-function ClauseCard({ clause }) {
-  const [title, status, copy, tone] = clause;
-  return (
-    <article className="clause-card">
-      <div>
-        <h3>{title}</h3>
-        <span className={`status-pill ${tone}`}>{status}</span>
-      </div>
-      <p>{copy}</p>
-    </article>
-  );
-}
-
-function FaqRow({ item }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <button className={`faq-row ${open ? 'open' : ''}`} type="button" onClick={() => setOpen(!open)}>
-      <span>
-        <strong>{item[0]}</strong>
-        {open && <p>{item[1]}</p>}
-      </span>
-      <ChevronDown />
-    </button>
-  );
-}
 
 export default function Home() {
   return (
-    <main>
-      <section id="analyse" className="lease-hero">
-        <div className="hero-copy">
-          <span className="eyebrow">Commercial lease review</span>
-          <h1>Know exactly what you're signing.</h1>
-          <p>Upload your commercial lease PDF and get a plain-English risk report covering key obligations, hidden costs, guarantees, options, outgoings, and make-good terms.</p>
-          <strong>$9 per report. No account required.</strong>
-          <a className="primary-cta" href="#upload">Analyse a Lease</a>
-          <small className="delete-note"><ShieldCheck /> PDF deleted after analysis</small>
-        </div>
-        <div className="mock-report-card" aria-label="Example lease risk report">
+    <main className="bg-white text-on-surface">
+      <section id="analyse" className="mx-auto grid max-w-[1200px] grid-cols-1 items-start gap-16 px-6 py-20 lg:grid-cols-12 lg:py-32">
+        <div className="flex flex-col gap-6 lg:col-span-7">
           <div>
-            <span>Lease risk report</span>
-            <strong>4 clauses need review</strong>
+            <span className="rounded-full bg-surface-container-high px-3 py-1 font-label-md text-label-md tracking-wide text-on-surface-variant">Commercial &amp; Retail Leases</span>
           </div>
-          {clauses.slice(0, 4).map((clause) => <ClauseCard key={clause[0]} clause={clause} />)}
+          <h1 className="font-display text-[40px] font-bold leading-[1.1] tracking-[-0.02em] text-on-surface sm:text-display">
+            Understand your lease before you sign it.
+          </h1>
+          <p className="max-w-[540px] font-body-lg text-body-lg text-on-surface-variant">
+            Upload your commercial lease PDF. Get a plain-English summary with red flags and key terms in under 2 minutes. $9 per analysis. No account required.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-6">
+            {[
+              ['lock', 'Encrypted'],
+              ['delete', 'Deleted after analysis'],
+              ['shield', 'Never used to train AI'],
+            ].map(([icon, label]) => (
+              <div key={label} className="flex items-center gap-2 text-on-surface-variant">
+                <span className="material-symbols-outlined text-[20px]">{icon}</span>
+                <span className="font-label-md text-label-md">{label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="lg:col-span-5">
+          <UploadForm />
         </div>
       </section>
 
-      <section className="trust-band">
-        {[
-          [ShieldCheck, 'TLS 1.3 + AES-256'],
-          [Trash2, 'Deleted after analysis'],
-          [Lock, 'Never used for AI training'],
-          [UserX, 'No account needed'],
-        ].map(([Icon, text]) => (
-          <div key={text}><Icon /><span>{text}</span></div>
-        ))}
-      </section>
-
-      <section className="section-shell steps-grid">
-        {[
-          ['01', 'Upload PDF', 'Add your commercial or retail lease PDF securely.'],
-          ['02', 'AI scans 12 risk categories', 'The lease is checked for obligations, fees, notice windows, guarantees, options, and common red flags.'],
-          ['03', 'Receive structured report', 'Get a clause-by-clause report with plain-English explanations and practical questions to raise.'],
-        ].map((step) => (
-          <article key={step[0]}>
-            <span>{step[0]}</span>
-            <h2>{step[1]}</h2>
-            <p>{step[2]}</p>
-          </article>
-        ))}
-      </section>
-
-      <section className="section-shell">
-        <div className="section-heading">
-          <h2>Sample report</h2>
-          <p>Example only.</p>
+      <section className="border-y border-[#e2e8f0] bg-white py-24">
+        <div className="mx-auto max-w-[850px] px-6">
+          <h2 className="mb-16 text-center font-headline-lg text-headline-lg text-on-surface">What your report covers</h2>
+          <div className="grid grid-cols-1 gap-x-12 gap-y-8 border-t border-[#f1f5f9] pt-8 md:grid-cols-2">
+            {reportAreas.map((area) => (
+              <div key={area} className="flex items-center gap-4 border-b border-[#f1f5f9] py-4">
+                <span className="h-2 w-2 rounded-full bg-primary-container" aria-hidden="true" />
+                <span className="font-body-lg text-body-lg font-bold">{area}</span>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="sample-grid">{clauses.map((clause) => <ClauseCard key={clause[0]} clause={clause} />)}</div>
       </section>
 
-      <section id="pricing" className="section-shell pricing-grid">
-        <article>
-          <h2>Single report</h2>
-          <strong>$9</strong>
-          <p>One commercial lease analysis with PDF report.</p>
-        </article>
-        <article className="best-value">
-          <span>Best value</span>
-          <h2>5-pack</h2>
-          <strong>$35</strong>
-          <p>Five reports for business owners comparing multiple sites.</p>
-        </article>
-        <p className="pricing-note">No subscription. No account. Pay per report.</p>
+      <section className="bg-[#f8fafc] py-24">
+        <div className="mx-auto max-w-container-max px-6">
+        <h2 className="mb-16 text-center font-headline-lg text-headline-lg text-on-surface">How it works</h2>
+          <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
+            {steps.map(([number, title, copy]) => (
+              <article key={number} className="flex flex-col gap-4">
+                <span className="font-display text-[64px] leading-none text-primary-container/20">{number}</span>
+                <h3 className="font-headline-md text-headline-md text-on-surface">{title}</h3>
+                <p className="font-body-md text-body-md text-on-surface-variant">{copy}</p>
+              </article>
+            ))}
+          </div>
+        </div>
       </section>
 
-      <section id="upload" className="section-shell upload-section">
-        <UploadForm />
+      <section className="flex flex-col items-center justify-center gap-8 px-6 py-24 text-center">
+        <div className="h-px w-24 bg-[#e2e8f0]" />
+        <div className="max-w-[600px]">
+          <h2 className="mb-4 font-headline-lg text-headline-lg text-on-surface">Privacy first, by design.</h2>
+          <p className="font-body-lg text-body-lg text-on-surface-variant">
+            We believe your legal data is yours alone. Our infrastructure is built to analyze, report, and purge. No permanent storage, no AI training on your documents, and no marketing emails.
+          </p>
+        </div>
+        <div className="flex flex-col gap-4 sm:flex-row">
+          <Link href="/privacy" className="rounded border border-[#e2e8f0] bg-white px-6 py-3 font-body-md text-body-md font-medium transition-colors hover:bg-surface-bright">Read Privacy Policy</Link>
+          <Link href="/result?mock=true&file=sample-commercial-lease.pdf" className="rounded border border-[#e2e8f0] bg-white px-6 py-3 font-body-md text-body-md font-medium transition-colors hover:bg-surface-bright">View Sample Report</Link>
+        </div>
       </section>
 
-      <section className="section-shell faq-list">
-        <h2>FAQ</h2>
-        {faqs.map((item) => <FaqRow key={item[0]} item={item} />)}
-      </section>
-
-      <footer className="marketing-footer">
-        <span>© 2026 GetLeaseLens. Not legal advice.</span>
-        <nav>
-          <LinkText href="/privacy">Privacy</LinkText>
-          <LinkText href="/terms">Terms</LinkText>
-          <LinkText href="/contact">Contact</LinkText>
-        </nav>
-      </footer>
+      <SiteFooter className="bg-white" />
     </main>
   );
-}
-
-function LinkText({ href, children }) {
-  return <a href={href}>{children}</a>;
 }
